@@ -46,13 +46,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // called by AddCityFragment
-    public void addCity(City city) {
-        dataList.add(city);
-        cityAdapter.notifyDataSetChanged();
-    }
-
-    public void refresh() {
-        cityAdapter.notifyDataSetChanged();
-    }
+    public void addCity(City city) { dataList.add(city); cityAdapter.notifyDataSetChanged(); }
+    public void refresh() { cityAdapter.notifyDataSetChanged(); }
 }
