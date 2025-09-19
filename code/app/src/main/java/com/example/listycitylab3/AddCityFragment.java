@@ -11,14 +11,20 @@ import androidx.fragment.app.DialogFragment;
 
 public class AddCityFragment extends DialogFragment {
 
+    // use fields so lambdas don't complain
+    private City editingCity;
+    private boolean isEdit;
+
+    // for editing
     static AddCityFragment newInstance(City city) {
-        Bundle args = new Bundle();
-        args.putSerializable("city", city);
+        Bundle b = new Bundle();
+        b.putSerializable("city", city);
         AddCityFragment f = new AddCityFragment();
-        f.setArguments(args);
+        f.setArguments(b);
         return f;
     }
 
+    // for adding
     static AddCityFragment newInstance() {
         return new AddCityFragment();
     }
@@ -29,15 +35,16 @@ public class AddCityFragment extends DialogFragment {
         EditText cityEdit = v.findViewById(R.id.edit_text_city_text);
         EditText provEdit = v.findViewById(R.id.edit_text_province_text);
 
-        City passed = null;
+        // pull arg into fields (not locals)
         if (getArguments() != null) {
-            Object o = getArguments().getSerializable("city");
-            if (o instanceof City) passed = (City) o;
+            Object obj = getArguments().getSerializable("city");
+            if (obj instanceof City) editingCity = (City) obj;
         }
-        boolean isEdit = (passed != null);
+        isEdit = (editingCity != null);
+
         if (isEdit) {
-            cityEdit.setText(passed.getName());
-            provEdit.setText(passed.getProvince());
+            cityEdit.setText(editingCity.getName());
+            provEdit.setText(editingCity.getProvince());
         }
 
         return new AlertDialog.Builder(getActivity())
@@ -49,9 +56,10 @@ public class AddCityFragment extends DialogFragment {
                     String p = provEdit.getText().toString();
                     MainActivity act = (MainActivity) getActivity();
                     if (act == null) return;
+
                     if (isEdit) {
-                        passed.setName(n);
-                        passed.setProvince(p);
+                        editingCity.setName(n);
+                        editingCity.setProvince(p);
                         act.refresh();
                     } else {
                         act.addCity(new City(n, p));
